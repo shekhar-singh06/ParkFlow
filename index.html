@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,106 +8,108 @@
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
 
-<header class="navbar">
-  <div class="logo">
-    <i class="fa-solid fa-square-p"></i> ParkFlow
-  </div>
-
-  <div class="stats-bar">
-    <span>Total: <strong id="stat-total">15</strong></span>
-    <span>Occupied: <strong id="stat-occupied" class="text-danger">0</strong></span>
-    <span>Free: <strong id="stat-free" class="text-success">15</strong></span>
-    <span><strong id="stat-stack" class="text-purple"></strong></span>
-  </div>
-</header>
-
-<main class="dashboard-grid">
-
-  <section class="card">
-    <h2><i class="fa-solid fa-sliders"></i> Gate Operations</h2>
-
-    <div class="form-group">
-      <label for="plate-input">Vehicle License Plate</label>
-      <input type="text" id="plate-input" placeholder="e.g. UK07AB1234">
+  <header class="navbar">
+    <div class="logo">
+      <i class="fa-solid fa-square-p"></i> ParkFlow
     </div>
 
-    <div class="form-group">
-      <label for="type-select">Vehicle Category</label>
-      <select id="type-select">
-        <option value="REGULAR">Regular Vehicle</option>
-        <option value="VIP">VIP Vehicle</option>
-      </select>
+    <div class="stats-bar">
+      <span>Total: <strong id="stat-total">15</strong></span>
+      <span>Occupied: <strong id="stat-occupied" class="text-danger">0</strong></span>
+      <span>Free: <strong id="stat-free" class="text-success">15</strong></span>
+      <span><strong id="stat-stack" class="text-purple"></strong></span>
     </div>
+  </header>
 
-    <div class="btn-group">
-      <button type="button" class="btn btn-entry" onclick="handleEntry()">
-        <i class="fa-solid fa-right-to-bracket"></i> Entry
+  <main class="dashboard-grid">
+
+    <section class="card">
+      <h2><i class="fa-solid fa-sliders"></i> Gate Operations</h2>
+
+      <div class="form-group">
+        <label for="plate-input">Vehicle License Plate</label>
+        <input type="text" id="plate-input" placeholder="e.g. UK07AB1234">
+      </div>
+
+      <div class="form-group">
+        <label for="type-select">Vehicle Category</label>
+        <select id="type-select">
+          <option value="REGULAR">Regular Vehicle</option>
+          <option value="VIP">VIP Vehicle</option>
+        </select>
+      </div>
+
+      <div class="btn-group">
+        <button type="button" class="btn btn-entry" onclick="handleEntry()">
+          <i class="fa-solid fa-right-to-bracket"></i> Entry
+        </button>
+
+        <button type="button" class="btn btn-exit" onclick="handleExit()">
+          <i class="fa-solid fa-right-from-bracket"></i> Exit
+        </button>
+      </div>
+
+      <button type="button" class="btn btn-undo" onclick="handleUndo()">
+        <i class="fa-solid fa-rotate-left"></i> Undo Last Entry
       </button>
 
-      <button type="button" class="btn btn-exit" onclick="handleExit()">
-        <i class="fa-solid fa-right-from-bracket"></i> Exit
-      </button>
-    </div>
+      <hr class="divider">
 
-    <button type="button" class="btn btn-undo" onclick="handleUndo()">
-      <i class="fa-solid fa-rotate-left"></i> Undo Last Entry
-    </button>
+      <h2><i class="fa-solid fa-magnifying-glass"></i> Search Vehicle</h2>
 
-    <hr class="divider">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Search Plate Number">
 
-    <h2><i class="fa-solid fa-magnifying-glass"></i> Search Vehicle</h2>
+        <button type="button" class="btn btn-search" onclick="handleSearch()">
+          <i class="fa-solid fa-search"></i> Search
+        </button>
+      </div>
 
-    <div class="search-box">
-      <input type="text" id="search-input" placeholder="Search Plate Number">
+      <div id="search-result" class="search-result"></div>
+    </section>
 
-      <button type="button" class="btn btn-search" onclick="handleSearch()">
-        <i class="fa-solid fa-search"></i> Search
-      </button>
-    </div>
+    <section class="card">
 
-    <div id="search-result" class="search-result"></div>
-  </section>
+      <h2>
+        <i class="fa-solid fa-crown text-gold"></i>
+        VIP Slots
+      </h2>
 
-  <section class="card">
+      <div id="vip-slots-container" class="slots-grid"></div>
 
-    <h2>
-      <i class="fa-solid fa-crown text-gold"></i>
-      VIP Slots
-    </h2>
+      <h2 class="section-title">
+        <i class="fa-solid fa-car"></i>
+        Regular Slots
+      </h2>
 
-    <div id="vip-slots-container" class="slots-grid"></div>
+      <div id="slots-container" class="slots-grid"></div>
 
-    <h2 class="section-title">
-      <i class="fa-solid fa-car"></i>
-      Regular Slots
-    </h2>
+      <h2 class="section-title">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+        Waiting Queue
+      </h2>
 
-    <div id="slots-container" class="slots-grid"></div>
+      <div id="queue-container" class="queue-box">
+        Queue is empty
+      </div>
 
-    <h2 class="section-title">
-      <i class="fa-solid fa-clock-rotate-left"></i>
-      Waiting Queue
-    </h2>
+      <h2 class="section-title">
+        <i class="fa-solid fa-terminal"></i>
+        Terminal Log
+      </h2>
 
-    <div id="queue-container" class="queue-box">
-      Queue is empty
-    </div>
+      <div id="log-container" class="log-box">
+        Connecting to C++ Backend Server...
+      </div>
 
-    <h2 class="section-title">
-      <i class="fa-solid fa-terminal"></i>
-      Terminal log
-    </h2>
+    </section>
 
-    <div id="log-container" class="log-box">
-      Connecting to C++ backend server...
-    </div>
+  </main>
 
-  </section>
-
-</main>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
