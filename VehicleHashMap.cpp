@@ -1,4 +1,5 @@
 #include "VehicleHashMap.h"
+
 using namespace std;
 void VehicleHashMap::insert(string plate, string location)
 {
@@ -6,18 +7,30 @@ void VehicleHashMap::insert(string plate, string location)
 }
 bool VehicleHashMap::exists(string plate)
 {
-    return vehicleMap.find(plate) != vehicleMap.end();
+    if (vehicleMap.find(plate) != vehicleMap.end())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
-
 string VehicleHashMap::getLocation(string plate)
 {
-    auto it = vehicleMap.find(plate);
-    if (it != vehicleMap.end())
-        return it->second;
-    return "";
+    if (exists(plate))
+    {
+        return vehicleMap[plate];
+    }
+    else
+    {
+        return "Not Found";
+    }
 }
-
 void VehicleHashMap::remove(string plate)
 {
-    vehicleMap.erase(plate);
+    if (exists(plate))
+    {
+        vehicleMap.erase(plate);
+    }
 }
