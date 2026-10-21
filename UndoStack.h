@@ -3,14 +3,13 @@
 
 #include <stack>
 #include <string>
+#include <cstddef>
+
 #include "ParkingSlots.h"
 #include "waitingqueue.h"
-#include "VehicleHAshMap.h"
-
-class VehicleHashMap;
+#include "VehicleHashMap.h"
 
 using namespace std;
-
 class ActionLog
 {
 private:
@@ -21,6 +20,7 @@ private:
 public:
     ActionLog();
     ActionLog(string p, string t, int idx);
+
     string getPlate();
     string getSlotType();
     int getSlotIndex();
@@ -37,8 +37,14 @@ public:
     bool empty();
     size_t size();
     ActionLog top();
+
     void removePlate(string plate);
-    string undoLastAction(ParkingSlots& slots, waitingqueue& waitingQueue, VehicleHashMap& vehicleMap);
+
+    string undoLastAction(
+        ParkingSlots& slots,
+        waitingqueue& waitingQueue,
+        VehicleHashMap& vehicleMap
+    );
 };
 
 #endif
