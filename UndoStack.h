@@ -7,7 +7,6 @@
 #include "waitingqueue.h"
 #include "VehicleHAshMap.h"
 
-// Forward Declaration to prevent circular dependency / type errors
 class VehicleHashMap;
 
 using namespace std;
