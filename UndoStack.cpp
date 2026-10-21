@@ -1,70 +1,132 @@
 #include "UndoStack.h"
 
-ActionLog::ActionLog() : plate(""), slotType(""), slotIndex(-1) {}
+using namespace std;
+ActionLog::ActionLog()
+{
+    plate = "";
+    slotType = "";
+    slotIndex = -1;
+}
 
-ActionLog::ActionLog(string p, string t, int idx) : plate(p), slotType(t), slotIndex(idx) {}
+ActionLog::ActionLog(string p, string t, int idx)
+{
+    plate = p;
+    slotType = t;
+    slotIndex = idx;
+}
 
-string ActionLog::getPlate() { return plate; }
-string ActionLog::getSlotType() { return slotType; }
-int ActionLog::getSlotIndex() { return slotIndex; }
+string ActionLog::getPlate()
+{
+    return plate;
+}
 
-void UndoStack::push(const ActionLog& action) {
+string ActionLog::getSlotType()
+{
+    return slotType;
+}
+
+int ActionLog::getSlotIndex()
+{
+    return slotIndex;
+}
+
+void UndoStack::push(const ActionLog& action)
+{
     historyStack.push(action);
 }
 
-void UndoStack::pop() {
-    if (!historyStack.empty()) historyStack.pop();
+void UndoStack::pop()
+{
+    if (historyStack.empty())
+    {
+        return;
+    }
+    else
+    {
+        historyStack.pop();
+    }
 }
 
-bool UndoStack::empty() {
-    return historyStack.empty();
+bool UndoStack::empty()
+{
+    if (historyStack.empty())
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
-size_t UndoStack::size() {
+size_t UndoStack::size()
+{
     return historyStack.size();
 }
 
-ActionLog UndoStack::top() {
-    if (!historyStack.empty()) return historyStack.top();
-    return ActionLog();
+ActionLog UndoStack::top()
+{
+    if (historyStack.empty())
+    {
+        return ActionLog();
+    }
+    else
+    {
+        return historyStack.top();
+    }
 }
 
-void UndoStack::removePlate(string plate) {
+void UndoStack::removePlate(string plate)
+{
     stack<ActionLog> tempStack;
-    while (!historyStack.empty()) {
+
+    while (!historyStack.empty())
+    {
         ActionLog action = historyStack.top();
         historyStack.pop();
-        if (action.getPlate() != plate) {
+
+        if (action.getPlate() != plate)
+        {
             tempStack.push(action);
         }
     }
-    while (!tempStack.empty()) {
+
+    while (!tempStack.empty())
+    {
         historyStack.push(tempStack.top());
         tempStack.pop();
     }
 }
 
-string UndoStack::undoLastAction(ParkingSlots& slots, waitingqueue& waitingQueue, VehicleHashMap& vehicleMap)
+string UndoStack::undoLastAction(
+    ParkingSlots& slots,
+    waitingqueue& waitingQueue,
+    VehicleHashMap& vehicleMap)
 {
     if (historyStack.empty())
     {
         return "{\"status\":\"error\",\"message\":\"No actions available to undo!\"}";
     }
 
-    ActionLog lastAction = historyStack.top();
+    ActionLog action = historyStack.top();
     historyStack.pop();
 
-    string plate = lastAction.getPlate();
-    string type = lastAction.getSlotType();
-    int index = lastAction.getSlotIndex();
+    string plate = action.getPlate();
+    string type = action.getSlotType();
+    int index = action.getSlotIndex();
 
-    if (type == "VIP") {
+    if (type == "VIP")
+    {
         slots.freeVIP(index);
         vehicleMap.remove(plate);
-    } else if (type == "REGULAR") {
+    }
+    else if (type == "REGULAR")
+    {
         slots.freeRegular(index);
         vehicleMap.remove(plate);
-    } else if (type == "QUEUE") {
+    }
+    else if (type == "QUEUE")
+    {
         waitingQueue.removePlate(plate);
         vehicleMap.remove(plate);
     }
