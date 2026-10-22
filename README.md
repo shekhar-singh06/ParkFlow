@@ -14,7 +14,7 @@ ParkFlow is an efficient C++ based Smart Parking Lot Management System that sepa
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - **Language:** C++,HTML,CSS,Java Script
 - **Data Structures Used:**
