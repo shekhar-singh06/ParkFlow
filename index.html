@@ -69,6 +69,21 @@
       </div>
 
       <div id="search-result" class="search-result"></div>
+
+      <hr class="divider">
+
+      <h2><i class="fa-solid fa-route"></i> Shortest Path Navigation</h2>
+
+      <div class="form-group">
+        <label for="dest-input">Destination Slot / Node</label>
+        <input type="text" id="dest-input" placeholder="e.g. VIP_Slot_1">
+      </div>
+
+      <button type="button" class="btn btn-search" onclick="handleNavigation()" style="width: 100%;">
+        <i class="fa-solid fa-map-location-dot"></i> Find Route 
+      </button>
+
+      <div id="nav-result" class="search-result" style="color: #4ade80;"></div>
     </section>
 
     <section class="card">
