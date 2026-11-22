@@ -1,6 +1,5 @@
 const API_URL = "http://localhost:8080/api";
 
-// Sync C++ Server Status Every 1 Second
 async function syncWithCppEngine() {
   try {
     const res = await fetch(`${API_URL}/status`);
@@ -49,7 +48,7 @@ function updateStats(reg, vip, stackSize) {
   document.getElementById('stat-stack').innerText = `${stackSize} Action(s)`;
 }
 
-// 1. ENTRY HANDLER
+// 1. ENTRY HANDLER 
 async function handleEntry() {
   const plateInput = document.getElementById('plate-input');
   const plate = plateInput.value.trim().toUpperCase();
@@ -60,6 +59,12 @@ async function handleEntry() {
   try {
     const res = await fetch(`${API_URL}/entry?plate=${plate}&type=${type}`, { method: 'POST' });
     const result = await res.json();
+    
+    if (result.status === "error") {
+      alert(result.message); 
+      return;
+    }
+
     addLog(`Vehicle ${plate} allocated to ${result.location}`);
     plateInput.value = '';
     syncWithCppEngine();
@@ -82,6 +87,7 @@ async function handleExit() {
     if (result.status === "success") {
       addLog(`Vehicle ${plate} ${result.message}`);
     } else {
+      alert(result.message); 
       addLog(`[C++ API ERROR] ${result.message}`);
     }
 
@@ -101,7 +107,7 @@ async function handleUndo() {
     if (result.status === "success") {
       addLog(`${result.message}`);
     } else {
-      addLog(`[C++ STACK ERROR] ${result.message}`);
+      addLog(`${result.message}`);
     }
     syncWithCppEngine();
   } catch (e) {
@@ -122,12 +128,36 @@ async function handleSearch() {
     const result = await res.json();
 
     if (result.found) {
-      resDiv.innerText = ` ${plate} is in ${result.location}`;
+      resDiv.innerText = `${plate} is in ${result.location}`;
     } else {
-      resDiv.innerText = ` ${plate} Vehicle not found!.`;
+      resDiv.innerText = `${plate} Vehicle not found!`;
     }
   } catch (e) {
     resDiv.innerText = "Error searching vehicle!";
+  }
+}
+
+// 5. DIJKSTRA SHORTEST PATH NAVIGATION HANDLER
+async function handleNavigation() {
+  const destInput = document.getElementById('dest-input');
+  const destination = destInput.value.trim();
+  const resDiv = document.getElementById('nav-result');
+  
+  if (!destination) return alert("Please enter a destination node/slot!");
+
+  try {
+    const res = await fetch(`${API_URL}/navigate?to=${destination}`);
+    const result = await res.json();
+
+    if (result.status === "success") {
+      let pathStr = result.path.join(' ➔ ');
+      resDiv.innerHTML = `Distance: ${result.distance}m<br>Path: ${pathStr}`;
+      addLog(`Calculated shortest path to ${destination} (Distance: ${result.distance}m)`);
+    } else {
+      resDiv.innerText = `Error: ${result.message}`;
+    }
+  } catch (e) {
+    resDiv.innerText = "Error fetching navigation route!";
   }
 }
 
