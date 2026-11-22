@@ -6,6 +6,7 @@
 #include "waitingqueue.h"
 #include "VehicleHashMap.h"
 #include "UndoStack.h"
+#include "graph.h"
 #include "VehicleManager.h"
 
 using namespace std;
