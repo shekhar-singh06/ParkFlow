@@ -10,6 +10,7 @@
 #include "VehicleHashMap.h"
 
 using namespace std;
+
 class ActionLog
 {
 private:
