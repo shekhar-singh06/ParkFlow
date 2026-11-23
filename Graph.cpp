@@ -1,9 +1,9 @@
-#include "Graph.h"
+#include "graph.h"
 #include <sstream>
 
 void Graph::addEdge(string u, string v, int weight) {
     adjList[u].push_back({v, weight});
-    adjList[v].push_back({u, weight}); // Undirected graph (two-way road)
+    adjList[v].push_back({u, weight}); 
 }
 
 string Graph::findShortestPath(string startNode, string endNode) {
@@ -39,7 +39,7 @@ string Graph::findShortestPath(string startNode, string endNode) {
         }
     }
 
-    // Reconstruct path as JSON array for frontend
+    
     if (distances[endNode] == INT_MAX) {
         return "{\"status\":\"error\",\"message\":\"Path not found\"}";
     }
@@ -52,7 +52,6 @@ string Graph::findShortestPath(string startNode, string endNode) {
     }
     path.push_back(startNode);
 
-    // Reverse to get path from start to end
     stringstream ss;
     ss << "{\"status\":\"success\",\"distance\":" << distances[endNode] << ",\"path\":[";
     for (int i = path.size() - 1; i >= 0; --i) {
