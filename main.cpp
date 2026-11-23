@@ -1,6 +1,7 @@
 #include <iostream>
 #include "httplib.h"
 #include "ParkingLot.h"
+#include "graph.h"
 
 #include "ParkingLot.cpp"
 #include "waitingqueue.cpp"
@@ -8,11 +9,37 @@
 #include "ParkingSlots.cpp"
 #include "UndoStack.cpp"
 #include "VehicleHashMap.cpp"
+#include "graph.cpp"
 
 using namespace std;
 
 int main() {
     ParkingLot parkingLot;
+    
+   
+    Graph parkingGraph;
+    parkingGraph.addEdge("Gate", "Intersection1", 5);
+    parkingGraph.addEdge("Intersection1", "Intersection2", 6);
+    parkingGraph.addEdge("Intersection2", "Intersection3", 5);
+
+   
+    for (int i = 1; i <= 5; ++i) {
+        string slotName = "VIP_Slot_" + to_string(i);
+        parkingGraph.addEdge("Intersection1", slotName, 5 + (i * 5));
+    }
+
+    
+    for (int i = 1; i <= 5; ++i) {
+        string slotName = "Slot_" + to_string(i);
+        parkingGraph.addEdge("Intersection2", slotName, 4 + (i * 5));
+    }
+
+   
+    for (int i = 6; i <= 10; ++i) {
+        string slotName = "Slot_" + to_string(i);
+        parkingGraph.addEdge("Intersection3", slotName, 4 + ((i - 5) * 5));
+    }
+
     httplib::Server svr;
 
     auto set_cors_headers = [](httplib::Response& res) {
@@ -60,6 +87,15 @@ int main() {
         string plate = req.has_param("plate") ? req.get_param_value("plate") : "";
         
         string responseJson = parkingLot.searchVehicle(plate);
+        res.set_content(responseJson, "application/json");
+    });
+
+   
+    svr.Get("/api/navigate", [&](const httplib::Request& req, httplib::Response& res) {
+        set_cors_headers(res);
+        string destination = req.has_param("to") ? req.get_param_value("to") : "Slot_1";
+        
+        string responseJson = parkingGraph.findShortestPath("Gate", destination);
         res.set_content(responseJson, "application/json");
     });
 
