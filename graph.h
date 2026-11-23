@@ -12,7 +12,7 @@ using namespace std;
 
 class Graph {
 private:
-    // Adjacency list: Node -> list of (Neighbor, weight/distance)
+    
     unordered_map<string, vector<pair<string, int>>> adjList;
 
 public:
